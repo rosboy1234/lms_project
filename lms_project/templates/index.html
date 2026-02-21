@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main>
+    <section class="hero">
+        <div class="container text-center">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-lg-start">
+                    <h1 class="display-4 fw-bold mb-3">Навчайся легко</h1>
+                    <p class="lead mb-4">Освіта, яка тобі сподобається! Інтерактивні курси, які змінять твоє життя.</p>
+                    <div class="d-flex flex-wrap gap-2 justify-content-lg-start justify-content-center">
+                        <a href="{% url 'courses_list' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-play-circle me-2"></i>Почати навчання
+                        </a>
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Зареєструватись
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="illustration">
+                        <i class="fas fa-laptop-code fa-6x primary-color"></i>
+                        <i class="fas fa-graduation-cap fa-5x secondary-color"></i>
+                        <i class="fas fa-brain fa-4x accent-color"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if announcements %}
+    <section class="py-4 bg-light">
+        <div class="container">
+            <h3 class="text-center mb-4">Останні новини</h3>
+            <div class="row">
+                {% for news in announcements %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ news.title }}</h5>
+                            <p class="card-text">{{ news.content|truncatewords:20 }}</p>
+                            <small class="text-muted">{{ news.created_at|date:"d.m.Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="courses py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">
+                <i class="fas fa-sparkles me-2"></i>Популярні курси
+            </h2>
+            <div class="row g-4 justify-content-center">
+                {% for course in courses %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="course card h-100">
+                        <div class="card-body text-center">
+                            <div class="course-icon mb-3">
+                                <i class="fas fa-laptop-code fa-3x {% cycle 'primary-color' 'secondary-color' 'accent-color' %}"></i>
+                            </div>
+                            <h3 class="card-title">{{ course.title }}</h3>
+                            <p class="card-text">{{ course.description|truncatewords:15 }}</p>
+                            <a href="{% url 'course_detail' course.id %}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center">Курсів поки що немає.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    
+    </main>
+{% endblock %}

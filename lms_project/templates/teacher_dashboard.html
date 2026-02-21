@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="py-5 mt-5">
+    <div class="container">
+        <h2 class="mb-4"><i class="fas fa-chalkboard-teacher me-2"></i>Кабінет викладача</h2>
+
+        <div class="row mb-5">
+            <h4 class="mb-3">Мої курси та студенти</h4>
+            {% for course in courses %}
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text">
+                            <i class="fas fa-users me-2"></i> Студентів: {{ course.enrollments.count }}<br>
+                            <i class="fas fa-file-alt me-2"></i> Модулів: {{ course.modules.count }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Очікують перевірки ({{ submissions_to_grade.count }})</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Студент</th>
+                                <th>Курс</th>
+                                <th>Урок</th>
+                                <th>Дата</th>
+                                <th>Дія</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub in submissions_to_grade %}
+                            <tr>
+                                <td>{{ sub.student.username }}</td>
+                                <td>{{ sub.lesson.module.course.title }}</td>
+                                <td>{{ sub.lesson.title }}</td>
+                                <td>{{ sub.created_at|date:"d.m H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'grade_submission' sub.id %}" class="btn btn-sm btn-primary">
+                                        Перевірити
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-3">Всі роботи перевірені! 🎉</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

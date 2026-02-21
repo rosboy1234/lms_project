@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<header class="course-header py-5 mt-5 course-header-gradient">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-primary mb-2">Курс</span>
+                <h1 class="display-4 fw-bold mb-3">{{ course.title }}</h1>
+                <p class="lead mb-4">{{ course.description }}</p>
+                
+                <div class="d-flex flex-wrap gap-2">
+                    {% if user.is_authenticated %}
+                        {% if is_enrolled %}
+                            <a href="{% url 'course_learn' course.id %}" class="btn btn-success btn-lg shadow">
+                                <i class="fas fa-play me-2"></i>Продовжити навчання
+                            </a>
+                        {% else %}
+                            <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary btn-lg shadow">
+                                <i class="fas fa-user-plus me-2"></i>Записатися на курс
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg shadow">
+                            Почати навчання
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="illustration text-center">
+                    <i class="fas fa-laptop-code fa-8x primary-color"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="course-details py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h2 class="section-title mb-4">Програма курсу</h2>
+                            
+                            <div class="accordion" id="courseModules">
+                                {% for module in course.modules.all %}
+                                <div class="accordion-item mb-3 border rounded overflow-hidden">
+                                    <h2 class="accordion-header" id="heading{{ module.id }}">
+                                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %} fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ module.id }}">
+                                            <i class="fas fa-folder-open me-2 text-primary"></i> {{ module.title }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ module.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#courseModules">
+                                        <div class="accordion-body bg-light">
+                                            <ul class="list-unstyled mb-0">
+                                                {% for lesson in module.lessons.all %}
+                                                <li class="mb-2 py-2 border-bottom">
+                                                    <i class="fas fa-play-circle me-2 text-muted"></i> {{ lesson.title }}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                    <p class="text-muted">Програма курсу оновлюється...</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="card sticky-top border-0 shadow sticky-sidebar-offset">
+                        <div class="card-body p-4">
+                            <h3 class="mb-3">Деталі</h3>
+                            <ul class="list-unstyled course-details-list lh-lg">
+                                <li><i class="fas fa-clock me-2 text-primary"></i> <strong>Тривалість:</strong> {{ course.duration }}</li>
+                                <li><i class="fas fa-user-tie me-2 text-primary"></i> <strong>Автор:</strong> {{ course.author.first_name }} {{ course.author.last_name }}</li>
+                                <li><i class="fas fa-certificate me-2 text-primary"></i> <strong>Сертифікат:</strong> Є</li>
+                                <li><i class="fas fa-globe me-2 text-primary"></i> <strong>Мова:</strong> Українська</li>
+                            </ul>
+                            <hr>
+                            <div class="course-price-box text-center p-3 bg-light rounded">
+                                <h2 class="mb-3 text-primary fw-bold">{{ course.price }} грн</h2>
+                                
+                                {% if user.is_authenticated %}
+                                    {% if is_enrolled %}
+                                        <div class="alert alert-success py-2 mb-0">Ви вже записані!</div>
+                                    {% else %}
+                                        <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary w-100 btn-lg shadow-sm">
+                                            Записатися зараз
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{% url 'register' %}" class="btn btn-outline-primary w-100">
+                                        Увійти для запису
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

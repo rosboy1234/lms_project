@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="py-5 mt-5">
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-header">
+                <h3>Оцінювання роботи</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Студент:</strong> {{ submission.student.username }} ({{ submission.student.get_full_name }})</p>
+                <p><strong>Урок:</strong> {{ submission.lesson.title }}</p>
+                <hr>
+                <h5>Відповідь студента:</h5>
+                <div class="p-3 bg-light border rounded mb-4">
+                    {{ submission.text|linebreaks }}
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success">Зберегти оцінку</button>
+                    <a href="{% url 'course_detail' submission.lesson.module.course.id %}" class="btn btn-secondary">Скасувати</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
