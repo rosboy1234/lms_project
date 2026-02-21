@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Course, Module, Lesson, Submission, Announcement, Enrollment # Додали Enrollment
+from .models import CustomUser, Course, Module, Lesson, Submission, Announcement, Enrollment 
 
 class LessonInline(admin.StackedInline):
     model = Lesson
@@ -21,7 +21,6 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_editable = ('grade',) 
     list_filter = ('grade', 'lesson')
 
-# Реєстрація записів на курс
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'course', 'enrolled_at')

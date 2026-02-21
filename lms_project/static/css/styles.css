@@ -1,4 +1,4 @@
-/* --- ЗМІННІ ТА БАЗА --- */
+
 :root {
     --primary-color: #e3c65b;
     --primary-dark: #d4a373;
@@ -17,7 +17,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Навігація */
+
 .navbar {
     position: fixed !important;
     top: 0;
@@ -36,32 +36,31 @@ body {
     text-decoration: none;
 }
 
-/* --- ГОЛОВНИЙ МАКЕТ НАВЧАННЯ --- */
+
 .lms-wrapper {
-    display: flex; /* Розділяємо на дві частини */
+    display: flex; 
     min-height: calc(100vh - var(--navbar-height));
     width: 100vw;
     background-color: var(--bg-light);
 }
 
-/* Ліва "Комірка" (Sidebar) */
 .lms-sidebar {
     width: var(--sidebar-width);
     background: var(--white);
     border-right: 1px solid #e1e8ed;
-    position: fixed; /* Жорстко фіксуємо зліва */
+    position: fixed;
     left: 0;
     top: var(--navbar-height);
     height: calc(100vh - var(--navbar-height));
-    overflow-y: auto; /* Скрол тільки всередині меню */
+    overflow-y: auto; 
     z-index: 1000;
     box-shadow: 2px 0 5px rgba(0,0,0,0.03);
 }
 
-/* Права панель (Матеріал) */
+
 .lms-main-content {
     flex: 1;
-    margin-left: var(--sidebar-width); /* Відступ на ширину сайдбару */
+    margin-left: var(--sidebar-width);
     padding: 40px;
     display: flex;
     justify-content: center;
@@ -69,10 +68,10 @@ body {
 
 .lesson-view-container {
     width: 100%;
-    max-width: 900px; /* Оптимально для читання */
+    max-width: 900px; 
 }
 
-/* Стилізація Модулів та Уроків */
+
 .module-header {
     background-color: #fcfcfc;
     padding: 15px 20px;
@@ -96,13 +95,13 @@ body {
 }
 
 .lesson-link.active {
-    background-color: #fff9e6; /* Твій жовтий колір */
+    background-color: #fff9e6; 
     color: var(--primary-dark);
     border-left-color: var(--primary-color);
     font-weight: 600;
 }
 
-/* КАРТКА МАТЕРІАЛУ */
+
 .material-card {
     background: #fff;
     border-radius: 15px;
@@ -116,7 +115,6 @@ body {
     margin-bottom: 30px;
 }
 
-/* Плеєр відео */
 .video-frame-container {
     border-radius: 12px;
     overflow: hidden;
@@ -124,7 +122,6 @@ body {
     background: #000;
 }
 
-/* Адаптивність для мобільних */
 @media (max-width: 992px) {
     .lms-sidebar { position: relative; width: 100%; height: auto; top: 0; }
     .lms-main-content { margin-left: 0; padding: 20px; }

@@ -5,8 +5,7 @@ from django.db.models import Count
 from .models import Course, Submission, Lesson, Announcement, Enrollment
 from .forms import CustomUserCreationForm, SubmissionForm, UserUpdateForm, GradingForm
 
-# ... (index_view, courses_list_view, register_view, profile_view залишаємо без змін) ...
-# Скопіюй їх зі старого файлу або попередньої відповіді, тут я пишу тільки НОВЕ та ЗМІНЕНЕ.
+
 
 def index_view(request):
     courses = Course.objects.all()[:3]
@@ -42,7 +41,6 @@ def profile_view(request):
         form = UserUpdateForm(instance=request.user)
     
     user_submissions = Submission.objects.filter(student=request.user)
-    # Додамо список курсів, де навчається студент
     enrollments = Enrollment.objects.filter(student=request.user)
     
     return render(request, 'profile.html', {
@@ -51,7 +49,6 @@ def profile_view(request):
         'enrollments': enrollments
     })
 
-# --- НОВА ЛОГІКА КУРСІВ ---
 
 def course_detail_view(request, course_id):
     """Це ПРОМО-сторінка. Тут НЕМАЄ уроків, тільки опис і кнопка."""
@@ -59,10 +56,8 @@ def course_detail_view(request, course_id):
     is_enrolled = False
     
     if request.user.is_authenticated:
-        # Перевіряємо, чи вже записаний
         is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
         if is_enrolled:
-            # Якщо записаний -> пропонуємо перейти до навчання
             pass 
 
     return render(request, 'course_detail.html', {
