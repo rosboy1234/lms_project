@@ -19,6 +19,13 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('submission/<int:submission_id>/grade/', views.grade_submission, name='grade_submission'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('course/add/', views.CourseCreateView.as_view(), name='course_create'),
+    path('course/<int:pk>/edit/', views.CourseUpdateView.as_view(), name='course_edit'),
+    path('course/<int:pk>/delete/', views.CourseDeleteView.as_view(), name='course_delete'),
+    path('course/<int:course_id>/module/add/', views.ModuleCreateView.as_view(), name='module_create'),
+    path('module/<int:module_id>/lesson/add/', views.LessonCreateView.as_view(), name='lesson_create'),
+    path('lesson/<int:pk>/delete/', views.LessonDeleteView.as_view(), name='lesson_delete'),
+
 ]
 
 if settings.DEBUG:

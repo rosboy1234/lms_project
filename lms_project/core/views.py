@@ -1,11 +1,38 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count
-from .models import Course, Submission, Lesson, Announcement, Enrollment
-from .forms import CustomUserCreationForm, SubmissionForm, UserUpdateForm, GradingForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView,DeleteView
+from .forms import CourseForm, CustomUserCreationForm, GradingForm, SubmissionForm, UserUpdateForm,ModuleForm,LessonForm
+from .models import Announcement, Course, Enrollment, Lesson, Submission,Module
 
+class AdminOnlyRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
 
+        if not self.request.user.is_authenticated:
+            return False
+
+        is_admin_role = (self.request.user.role.lower() == 'admin')
+        return is_admin_role or self.request.user.is_superuser
+
+class CourseCreateView(LoginRequiredMixin, AdminOnlyRequiredMixin, CreateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'course_form.html'
+    success_url = reverse_lazy('courses_list')
+
+    def form_valid(self, form):
+      
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class CourseUpdateView(LoginRequiredMixin, AdminOnlyRequiredMixin, UpdateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'course_form.html'
+    success_url = reverse_lazy('courses_list')
 
 def index_view(request):
     courses = Course.objects.all()[:3]
@@ -51,7 +78,7 @@ def profile_view(request):
 
 
 def course_detail_view(request, course_id):
-    """Це ПРОМО-сторінка. Тут НЕМАЄ уроків, тільки опис і кнопка."""
+
     course = get_object_or_404(Course, pk=course_id)
     is_enrolled = False
     
@@ -103,7 +130,7 @@ def course_learn_view(request, course_id):
 
 @login_required
 def teacher_dashboard_view(request):
-    """Кабінет викладача: бачить студентів і роботи"""
+
     if request.user.role not in ['teacher', 'admin']:
         return redirect('home')
 
@@ -132,3 +159,44 @@ def grade_submission(request, submission_id):
         form = GradingForm(instance=submission)
         
     return render(request, 'grade_submission.html', {'form': form, 'submission': submission})
+
+class CourseDeleteView(LoginRequiredMixin, AdminOnlyRequiredMixin, DeleteView):
+    model = Course
+    template_name = 'course_confirm_delete.html'
+    success_url = reverse_lazy('courses_list') 
+
+class ModuleCreateView(LoginRequiredMixin, AdminOnlyRequiredMixin, CreateView):
+    model = Module
+    form_class = ModuleForm
+    template_name = 'module_form.html'
+    
+    def form_valid(self, form):
+        course = get_object_or_404(Course, pk=self.kwargs['course_id'])
+        form.instance.course = course
+        return super().form_valid(form)
+
+    def get_success_url(self):
+
+        return reverse_lazy('course_detail', kwargs={'course_id': self.kwargs['course_id']})
+    
+class LessonCreateView(LoginRequiredMixin, AdminOnlyRequiredMixin, CreateView):
+    model = Lesson
+    form_class = LessonForm
+    template_name = 'lesson_form.html'
+    
+    def form_valid(self, form):
+        module = get_object_or_404(Module, pk=self.kwargs['module_id'])
+        form.instance.module = module
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        module = get_object_or_404(Module, pk=self.kwargs['module_id'])
+        return reverse_lazy('course_detail', kwargs={'course_id': module.course.id})
+    
+class LessonDeleteView(LoginRequiredMixin, AdminOnlyRequiredMixin, DeleteView):
+    model = Lesson
+    template_name = 'lesson_confirm_delete.html'
+    
+    def get_success_url(self):
+        course_id = self.object.module.course.id
+        return reverse_lazy('course_detail', kwargs={'course_id': course_id})

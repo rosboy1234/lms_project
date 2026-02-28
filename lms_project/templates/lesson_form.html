@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 py-5">
+    <div class="card shadow col-md-8 mx-auto">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-book-open"></i> Додати новий урок</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="javascript:history.back()" class="btn btn-secondary">Скасувати</a>
+                    <button type="submit" class="btn btn-primary">Зберегти урок</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
