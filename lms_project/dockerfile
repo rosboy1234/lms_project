@@ -1,28 +1,23 @@
 FROM python:3.11-slim
 
-# Set environment variables
-# Prevents Python from writing .pyc files to disk
+# Забороняємо Python створювати .pyc файли та буферизувати вивід
 ENV PYTHONDONTWRITEBYTECODE 1
-# Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED 1
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements file into the container
-COPY requirements.txt /app/
-
-# Install dependencies
+# Копіюємо файл залежностей і встановлюємо їх
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Копіюємо весь код проєкту
+COPY . .
 
-# Copy the application code into the container
-COPY . /app/
-
+# Збираємо статику (тепер файли вже на місці, тому помилки не буде)
 RUN python manage.py collectstatic --noinput
 
-# Expose the port your application runs on
-EXPOSE 8080
+# Відкриваємо порт
+EXPOSE 8000
 
-# Command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8080","lms_project.wsgi:application"]
+# Запускаємо сервер (без квадратних дужок)
+CMD gunicorn lms_project.wsgi:application --bind 0.0.0.0:8000
