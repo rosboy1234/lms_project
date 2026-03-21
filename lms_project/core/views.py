@@ -1,19 +1,21 @@
+import stripe
+from django.conf import settings
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView,DeleteView
-from .forms import CourseForm, CustomUserCreationForm, GradingForm, SubmissionForm, UserUpdateForm,ModuleForm,LessonForm
-from .models import Announcement, Course, Enrollment, Lesson, Submission,Module
+from django.urls import reverse_lazy, reverse
+from django.views.generic import CreateView, UpdateView, DeleteView
+from .forms import CourseForm, CustomUserCreationForm, GradingForm, SubmissionForm, UserUpdateForm, ModuleForm, LessonForm
+from .models import Announcement, Course, Enrollment, Lesson, Submission, Module
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class AdminOnlyRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-
         if not self.request.user.is_authenticated:
             return False
-
         is_admin_role = (self.request.user.role.lower() == 'admin')
         return is_admin_role or self.request.user.is_superuser
 
@@ -24,7 +26,6 @@ class CourseCreateView(LoginRequiredMixin, AdminOnlyRequiredMixin, CreateView):
     success_url = reverse_lazy('courses_list')
 
     def form_valid(self, form):
-      
         form.instance.author = self.request.user
         return super().form_valid(form)
 
@@ -76,16 +77,12 @@ def profile_view(request):
         'enrollments': enrollments
     })
 
-
 def course_detail_view(request, course_id):
-
     course = get_object_or_404(Course, pk=course_id)
     is_enrolled = False
     
     if request.user.is_authenticated:
         is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
-        if is_enrolled:
-            pass 
 
     return render(request, 'course_detail.html', {
         'course': course,
@@ -130,17 +127,17 @@ def course_learn_view(request, course_id):
 
 @login_required
 def teacher_dashboard_view(request):
-
     if request.user.role not in ['teacher', 'admin']:
         return redirect('home')
 
     courses = Course.objects.all()
-    
     submissions_to_grade = Submission.objects.filter(grade__isnull=True).order_by('created_at')
+    graded_submissions = Submission.objects.filter(grade__isnull=False).order_by('-created_at')
     
     return render(request, 'teacher_dashboard.html', {
         'courses': courses,
-        'submissions_to_grade': submissions_to_grade
+        'submissions_to_grade': submissions_to_grade,
+        'graded_submissions': graded_submissions
     })
 
 @login_required
@@ -176,7 +173,6 @@ class ModuleCreateView(LoginRequiredMixin, AdminOnlyRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-
         return reverse_lazy('course_detail', kwargs={'course_id': self.kwargs['course_id']})
     
 class LessonCreateView(LoginRequiredMixin, AdminOnlyRequiredMixin, CreateView):
@@ -200,3 +196,59 @@ class LessonDeleteView(LoginRequiredMixin, AdminOnlyRequiredMixin, DeleteView):
     def get_success_url(self):
         course_id = self.object.module.course.id
         return reverse_lazy('course_detail', kwargs={'course_id': course_id})
+
+@login_required
+def create_checkout_session(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    domain_url = request.build_absolute_uri('/')[:-1]
+
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            client_reference_id=request.user.id,
+            success_url=domain_url + reverse('payment_success', args=[course.id]),
+            cancel_url=domain_url + reverse('payment_cancel'),
+            payment_method_types=['card'],
+            mode='payment',
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'uah',
+                        'unit_amount': int(course.price * 100),
+                        'product_data': {
+                            'name': course.title,
+                        },
+                    },
+                    'quantity': 1,
+                }
+            ]
+        )
+        return redirect(checkout_session.url, code=303)
+    except Exception as e:
+        return render(request, 'payment_cancel.html', {'error': str(e)})
+
+@login_required
+def payment_success(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    Enrollment.objects.get_or_create(student=request.user, course=course)
+    return render(request, 'payment_success.html', {'course': course})
+
+@login_required
+def payment_cancel(request):
+    return render(request, 'payment_cancel.html')
+
+class LessonUpdateView(LoginRequiredMixin, AdminOnlyRequiredMixin, UpdateView):
+    model = Lesson
+    form_class = LessonForm
+    template_name = 'lesson_form.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('course_detail', kwargs={'course_id': self.object.module.course.id})
+
+@login_required
+def remove_student(request, enrollment_id):
+    if request.user.role not in ['teacher', 'admin'] and not request.user.is_superuser:
+        return redirect('home')
+    
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id)
+    enrollment.delete()
+    return redirect('teacher_dashboard')

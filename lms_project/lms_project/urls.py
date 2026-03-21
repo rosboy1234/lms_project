@@ -24,8 +24,12 @@ urlpatterns = [
     path('course/<int:pk>/delete/', views.CourseDeleteView.as_view(), name='course_delete'),
     path('course/<int:course_id>/module/add/', views.ModuleCreateView.as_view(), name='module_create'),
     path('module/<int:module_id>/lesson/add/', views.LessonCreateView.as_view(), name='lesson_create'),
+    path('lesson/<int:pk>/edit/', views.LessonUpdateView.as_view(), name='lesson_edit'),
     path('lesson/<int:pk>/delete/', views.LessonDeleteView.as_view(), name='lesson_delete'),
-
+    path('enrollment/<int:enrollment_id>/remove/', views.remove_student, name='remove_student'),
+    path('checkout/<int:course_id>/', views.create_checkout_session, name='checkout'),
+    path('payment-success/<int:course_id>/', views.payment_success, name='payment_success'),
+    path('payment-cancel/', views.payment_cancel, name='payment_cancel'),
 ]
 
 if settings.DEBUG:

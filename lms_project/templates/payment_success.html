@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5 mt-5 text-center">
+    <i class="fas fa-check-circle text-success fa-5x mb-4"></i>
+    <h1 class="fw-bold mb-3">Оплата успішна!</h1>
+    <p class="lead text-muted mb-4">Ви успішно придбали доступ до курсу "{{ course.title }}".</p>
+    <a href="{% url 'course_learn' course.id %}" class="btn btn-primary btn-lg rounded-pill px-5">Перейти до навчання</a>
+</div>
+{% endblock %}

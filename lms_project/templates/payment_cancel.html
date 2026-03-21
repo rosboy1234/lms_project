@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5 mt-5 text-center">
+    <i class="fas fa-times-circle text-danger fa-5x mb-4"></i>
+    <h1 class="fw-bold mb-3">Оплату скасовано</h1>
+    <p class="lead text-muted mb-4">Ви перервали процес оплати. З вашого рахунку не було списано жодних коштів.</p>
+    <a href="{% url 'courses_list' %}" class="btn btn-outline-primary btn-lg rounded-pill px-5">Повернутися до курсів</a>
+</div>
+{% endblock %}

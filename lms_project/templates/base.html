@@ -48,7 +48,11 @@
                         {% if user.role == 'teacher' %}
                             <li class="nav-item"><a class="nav-link text-warning" href="{% url 'teacher_dashboard' %}">Викладач</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Привіт, {{ user.username }}</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'profile' %}">
+                                Привіт, {{ user.first_name|default:user.username }} {{ user.last_name }}
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <form action="{% url 'logout' %}" method="post" class="d-inline">
                                 {% csrf_token %}

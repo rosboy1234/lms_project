@@ -27,16 +27,12 @@ class ModuleForm(forms.ModelForm):
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'role')
+        fields = ('username', 'email', 'first_name', 'last_name', 'role')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            if field_name == 'role':
-                field.widget.attrs['class'] = 'form-select'
-            else:
-                field.widget.attrs['class'] = 'form-control'
-                field.widget.attrs['placeholder'] = field.label
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

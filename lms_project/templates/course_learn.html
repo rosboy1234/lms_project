@@ -5,123 +5,6 @@
 {% block title %}{{ course.title }} | Навчання{% endblock %}
 
 {% block content %}
-<style>
-    /* =========================================
-       ІЗОЛЬОВАНІ СТИЛІ ТІЛЬКИ ДЛЯ ЦІЄЇ СТОРІНКИ
-    ========================================= */
-    body { background-color: #f4f7f6; }
-    
-    .lms-layout {
-        display: flex;
-        min-height: calc(100vh - 70px);
-        background-color: #f4f7f6;
-    }
-    
-    /* Бічна панель */
-    .lms-sidebar {
-        width: 350px;
-        background: #ffffff;
-        border-right: 1px solid #e5e7eb;
-        height: calc(100vh - 70px);
-        position: sticky;
-        top: 70px;
-        overflow-y: auto;
-        flex-shrink: 0;
-        z-index: 100;
-    }
-    
-    .module-header {
-        background-color: #ffffff;
-        font-weight: 700;
-        color: #1f2937;
-        font-size: 1rem;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .lesson-item {
-        border-left: 4px solid transparent;
-        transition: all 0.2s ease-in-out;
-        color: #4b5563;
-        padding: 1rem 1.5rem;
-        cursor: pointer;
-        text-decoration: none;
-    }
-    
-    .lesson-item:hover {
-        background-color: #f9fafb;
-        color: #111827;
-    }
-    
-    .lesson-item.active {
-        background-color: #fff9e6; 
-        border-left-color: #e3c65b; /* Ваш фірмовий колір */
-        color: #d4a373;
-        font-weight: 600;
-    }
-
-    /* Основний контент */
-    .lms-content {
-        flex-grow: 1;
-        padding: 2.5rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .video-wrapper {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        background: #000;
-        margin-bottom: 2.5rem;
-    }
-    
-    .content-box {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 2.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-    }
-    
-    /* Таби для завдань */
-    .nav-tabs {
-        border-bottom: 2px solid #e5e7eb;
-    }
-    .nav-tabs .nav-link {
-        color: #6b7280;
-        border: none;
-        border-bottom: 3px solid transparent;
-        font-weight: 600;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-    }
-    
-    .nav-tabs .nav-link:hover {
-        border-color: transparent;
-        color: #374151;
-    }
-
-    .nav-tabs .nav-link.active {
-        color: #0d6efd;
-        background: transparent;
-        border-bottom-color: #0d6efd;
-    }
-    
-    .status-card {
-        border-radius: 12px;
-        border-left: 5px solid;
-    }
-    
-    .status-pending { border-left-color: #f59e0b; background-color: #fffbeb; }
-    .status-graded { border-left-color: #10b981; background-color: #ecfdf5; }
- 
-    @media (max-width: 991px) {
-        .lms-layout { flex-direction: column-reverse; }
-        .lms-sidebar { width: 100%; height: auto; position: static; border-right: none; border-top: 1px solid #e5e7eb;}
-        .lms-content { padding: 1.5rem; }
-    }
-</style>
-
 <div class="lms-layout">
     <aside class="lms-sidebar shadow-sm">
         <div class="p-4 border-bottom bg-light">
@@ -206,7 +89,7 @@
                 <div class="tab-content" id="lessonTabContent-{{ lesson.id }}">
                     <div class="tab-pane fade show active" id="content-{{ lesson.id }}" role="tabpanel">
                         <div class="content-box fs-5 lh-lg text-dark">
-                            {{ lesson.content|safe|linebreaks }}
+                            {{ lesson.content|safe }}
                         </div>
                     </div>
 
@@ -287,5 +170,4 @@
         {% endfor %}
     </main>
 </div>
-
 {% endblock %}

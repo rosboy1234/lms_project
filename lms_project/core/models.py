@@ -1,3 +1,4 @@
+from ckeditor.fields import RichTextField
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
@@ -38,7 +39,7 @@ class Module(models.Model):
 class Lesson(models.Model):
     module = models.ForeignKey(Module, related_name='lessons', on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name="Тема уроку")
-    content = models.TextField(verbose_name="Текст уроку")
+    content = RichTextField(blank=True, null=True)
     video_url = models.URLField(blank=True, null=True, verbose_name="Посилання на відео (YouTube)")
     image = models.ImageField(upload_to='lesson_images/', blank=True, null=True, verbose_name="Зображення")
     

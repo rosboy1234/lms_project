@@ -1,10 +1,8 @@
-
 :root {
     --primary-color: #e3c65b;
     --primary-dark: #d4a373;
     --white: #ffffff;
     --bg-light: #f4f7f6;
-    --sidebar-width: 320px;
     --navbar-height: 70px;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -13,10 +11,9 @@ body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding-top: var(--navbar-height);
-    background-color: var(--white);
+    background-color: var(--bg-light);
     overflow-x: hidden;
 }
-
 
 .navbar {
     position: fixed !important;
@@ -36,95 +33,135 @@ body {
     text-decoration: none;
 }
 
+.lesson-form-fields input[type="text"],
+.lesson-form-fields input[type="url"],
+.lesson-form-fields select,
+.lesson-form-fields textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
 
-.lms-wrapper {
-    display: flex; 
+.lesson-form-fields label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.django-ckeditor-widget {
+    width: 100% !important;
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.lms-layout {
+    display: flex;
     min-height: calc(100vh - var(--navbar-height));
-    width: 100vw;
     background-color: var(--bg-light);
 }
 
 .lms-sidebar {
-    width: var(--sidebar-width);
+    width: 350px;
     background: var(--white);
-    border-right: 1px solid #e1e8ed;
-    position: fixed;
-    left: 0;
-    top: var(--navbar-height);
+    border-right: 1px solid #e5e7eb;
     height: calc(100vh - var(--navbar-height));
-    overflow-y: auto; 
-    z-index: 1000;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+    position: sticky;
+    top: var(--navbar-height);
+    overflow-y: auto;
+    flex-shrink: 0;
+    z-index: 100;
 }
-
-
-.lms-main-content {
-    flex: 1;
-    margin-left: var(--sidebar-width);
-    padding: 40px;
-    display: flex;
-    justify-content: center;
-}
-
-.lesson-view-container {
-    width: 100%;
-    max-width: 900px; 
-}
-
 
 .module-header {
-    background-color: #fcfcfc;
-    padding: 15px 20px;
+    background-color: var(--white);
     font-weight: 700;
-    border-bottom: 1px solid #eee;
-    color: #333;
+    color: #1f2937;
+    font-size: 1rem;
+    border-bottom: 1px solid #f3f4f6;
 }
 
-.lesson-link {
-    display: block;
-    padding: 12px 20px 12px 45px;
-    color: #555;
-    text-decoration: none;
+.lesson-item {
     border-left: 4px solid transparent;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease-in-out;
+    color: #4b5563;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.lesson-link:hover {
-    background-color: #f8f9fa;
-    color: #000;
+.lesson-item:hover {
+    background-color: #f9fafb;
+    color: #111827;
 }
 
-.lesson-link.active {
+.lesson-item.active {
     background-color: #fff9e6; 
-    color: var(--primary-dark);
     border-left-color: var(--primary-color);
+    color: var(--primary-dark);
     font-weight: 600;
 }
 
-
-.material-card {
-    background: #fff;
-    border-radius: 15px;
-    padding: 45px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    text-align: left;
+.lms-content {
+    flex-grow: 1;
+    padding: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.material-card h2 {
-    font-weight: 800;
-    margin-bottom: 30px;
-}
-
-.video-frame-container {
-    border-radius: 12px;
+.video-wrapper {
+    border-radius: 16px;
     overflow: hidden;
-    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     background: #000;
+    margin-bottom: 2.5rem;
 }
 
-@media (max-width: 992px) {
-    .lms-sidebar { position: relative; width: 100%; height: auto; top: 0; }
-    .lms-main-content { margin-left: 0; padding: 20px; }
-    .lms-wrapper { flex-direction: column; }
+.content-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
 }
 
+.nav-tabs {
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.nav-tabs .nav-link {
+    color: #6b7280;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    color: #374151;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background: transparent;
+    border-bottom-color: #0d6efd;
+}
+
+.status-card {
+    border-radius: 12px;
+    border-left: 5px solid;
+}
+
+.status-pending { border-left-color: #f59e0b; background-color: #fffbeb; }
+.status-graded { border-left-color: #10b981; background-color: #ecfdf5; }
+
+@media (max-width: 991px) {
+    .lms-layout { flex-direction: column-reverse; }
+    .lms-sidebar { width: 100%; height: auto; position: static; border-right: none; border-top: 1px solid #e5e7eb;}
+    .lms-content { padding: 1.5rem; }
+}

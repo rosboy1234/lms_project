@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
     'core',    
 ]
 
@@ -129,7 +130,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+
+
+
+STRIPE_PUBLIC_KEY = 'pk_test_51TAowFGaNkfQ6gRlwhyeGYbHKAHfuoOAjwWY4oKSG9dIUK7Di0sgDWkBKiEyt6WrHfVLqa75goYscCwgvSiMqtRZ00wxFgiAvD'
+STRIPE_SECRET_KEY = 'sk_test_51TAowFGaNkfQ6gRl0DCvPe7g2e5bL1dpoy7yh0O3RqKPeYzOL2cdoq2axW8e5GUWdG7b7gH1qRbwf9tSGkpjXPPj00Ule6U5HJ'
+
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.CustomUser'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+
