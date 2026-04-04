@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Submission,Course,Module,Lesson
+from .models import CustomUser, Submission, Course, Module, Lesson
 
 class CourseForm(forms.ModelForm):
     class Meta:
@@ -21,9 +21,6 @@ class ModuleForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва модуля (наприклад: Вступ до Python)'}),
         }
 
-
-
-
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
@@ -31,8 +28,16 @@ class CustomUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Робимо поля обов'язковими
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
+        
+        # Додаємо стилі для всіх полів
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update({'class': 'form-control'})
+        
+        self.fields['first_name'].widget.attrs.update({'placeholder': "Ваше ім'я"})
+        self.fields['last_name'].widget.attrs.update({'placeholder': 'Ваше прізвище'})
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
@@ -82,7 +87,6 @@ class GradingForm(forms.ModelForm):
             'grade': 'Оцінка',
             'feedback': 'Коментар викладача'
         }
-
 
 class LessonForm(forms.ModelForm):
     class Meta:

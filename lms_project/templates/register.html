@@ -14,7 +14,6 @@
                             
                             {% if form.errors %}
                                 <div class="alert alert-danger">
-                                    {{ form.non_field_errors }}
                                     <ul>
                                         {% for field in form %}
                                             {% for error in field.errors %}
@@ -32,6 +31,22 @@
                                     {{ form.username }}
                                 </div>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">Ім'я</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Прізвище</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
                             
                             <div class="mb-3">
                                 <label for="{{ form.email.id_for_label }}" class="form-label">Email адреса</label>
@@ -45,7 +60,8 @@
                                 <label class="form-label">Ваша роль</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
-                                    {{ form.role }} </div>
+                                    {{ form.role }}
+                                </div>
                             </div>
 
                             {% for field in form %}
@@ -60,7 +76,7 @@
                                                id="{{ field.id_for_label }}"
                                                required>
                                     </div>
-                                    <div class="form-text">{{ field.help_text }}</div>
+                                    <div class="form-text" style="font-size: 0.8rem;">{{ field.help_text }}</div>
                                 </div>
                                 {% endif %}
                             {% endfor %}
